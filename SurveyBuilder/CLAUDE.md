@@ -12,20 +12,21 @@ Built as a thesis project at Nackademin (Webbutvecklare .NET, CMS24).
 
 ## Architecture
 The backend follows a layered architecture:
-- Controllers — handle HTTP requests and responses
-- Services — contain business logic
-- Repositories — handle database access via EF Core
-- Models — entity classes mapped to database tables
-- DTOs — data transfer objects for API requests/responses
+- Controllers ï¿½ handle HTTP requests and responses
+- Services ï¿½ contain business logic
+- Repositories ï¿½ handle database access via EF Core
+- Models ï¿½ entity classes mapped to database tables
+- DTOs ï¿½ data transfer objects for API requests/responses
 
 ## Code Style
 - Use conventional commits for all git commits
   - feat, fix, docs, chore, refactor, test
-- Commit regularly — after each meaningful unit of work 
+- Commit regularly ï¿½ after each meaningful unit of work 
   (a working endpoint, a new service method, a completed feature). 
   Not too small (one line changes) and not too large (hours of work in one commit).
+- Never add Co-Authored-By lines to commit messages
 - Use async/await for all database and I/O operations
-- Keep controllers thin — business logic belongs in services
+- Keep controllers thin ï¿½ business logic belongs in services
 - Use DTOs to avoid exposing entities directly in API responses
 
 ## Git Branching
@@ -34,7 +35,7 @@ The backend follows a layered architecture:
 - Merge to main only when a feature is complete and working
 
 ## Project Structure
-- SurveyBuilder.API — the main backend API project
+- SurveyBuilder.API ï¿½ the main backend API project
 - React frontend will be added in a separate folder
 
 ## Key Features to Build
