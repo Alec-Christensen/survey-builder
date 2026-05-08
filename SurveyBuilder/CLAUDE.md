@@ -28,6 +28,11 @@ The backend follows a layered architecture:
 - Keep controllers thin — business logic belongs in services
 - Use DTOs to avoid exposing entities directly in API responses
 
+## Git Branching
+- Always work on feature branches, never directly on main
+- Branch naming: feat/feature-name, fix/bug-name, chore/task-name
+- Merge to main only when a feature is complete and working
+
 ## Project Structure
 - SurveyBuilder.API — the main backend API project
 - React frontend will be added in a separate folder
