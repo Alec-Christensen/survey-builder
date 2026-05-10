@@ -9,4 +9,5 @@ public interface ISurveyService
     Task<SurveyResponse> CreateAsync(CreateSurveyRequest dto, string userId);
     Task<SurveyResponse?> UpdateAsync(Guid id, UpdateSurveyRequest dto, string userId);
     Task<bool> DeleteAsync(Guid id, string userId);
+    Task<SurveyResultsResponse?> GetResultsAsync(Guid id, string userId);
 }
