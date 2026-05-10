@@ -77,6 +77,76 @@ public class SurveyService : ISurveyService
         return true;
     }
 
+    public async Task<SurveyResultsResponse?> GetResultsAsync(Guid id, string userId)
+    {
+        var survey = await _db.Surveys
+            .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+        if (survey is null) return null;
+
+        var responseCount = await _db.Responses.CountAsync(r => r.SurveyId == id);
+
+        var questions = await _db.Questions
+            .Where(q => q.SurveyId == id)
+            .Include(q => q.Options.OrderBy(o => o.Order))
+            .OrderBy(q => q.Order)
+            .ToListAsync();
+
+        var answers = await _db.Answers
+            .Where(a => a.Question.SurveyId == id)
+            .ToListAsync();
+
+        var answersByQuestion = answers.ToLookup(a => a.QuestionId);
+
+        var questionResults = questions.Select(q =>
+        {
+            var questionAnswers = answersByQuestion[q.Id].ToList();
+
+            var result = new QuestionResultResponse
+            {
+                QuestionId = q.Id,
+                Text = q.Text,
+                Type = q.Type,
+                Order = q.Order,
+                AnswerCount = questionAnswers.Count
+            };
+
+            if (q.Type is QuestionType.Text or QuestionType.Rating)
+            {
+                result.TextAnswers = questionAnswers
+                    .Where(a => a.TextValue is not null)
+                    .Select(a => a.TextValue!)
+                    .ToList();
+            }
+            else
+            {
+                result.OptionResults = q.Options.Select(o =>
+                {
+                    var count = questionAnswers.Count(a => a.SelectedOptionId == o.Id);
+                    return new OptionResultResponse
+                    {
+                        OptionId = o.Id,
+                        Text = o.Text,
+                        Count = count,
+                        Percentage = responseCount > 0
+                            ? Math.Round((double)count / responseCount * 100, 1)
+                            : 0
+                    };
+                }).ToList();
+            }
+
+            return result;
+        }).ToList();
+
+        return new SurveyResultsResponse
+        {
+            SurveyId = survey.Id,
+            Title = survey.Title,
+            ResponseCount = responseCount,
+            Questions = questionResults
+        };
+    }
+
     private static SurveyResponse ToResponse(Survey s) => new()
     {
         Id = s.Id,
