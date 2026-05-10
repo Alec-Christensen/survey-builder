@@ -52,6 +52,15 @@ public class SurveysController : ControllerBase
         return Ok(survey);
     }
 
+    [HttpGet("{id:guid}/results")]
+    public async Task<ActionResult<SurveyResultsResponse>> GetResults(Guid id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var results = await _surveyService.GetResultsAsync(id, userId);
+        if (results is null) return NotFound();
+        return Ok(results);
+    }
+
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
