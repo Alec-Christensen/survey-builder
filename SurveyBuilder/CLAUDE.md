@@ -36,13 +36,54 @@ The backend follows a layered architecture:
 
 ## Project Structure
 - SurveyBuilder.API - the main backend API project
-- React frontend will be added in a separate folder
+- survey-builder-client - React frontend (Vite + TypeScript)
 
-## Key Features to Build
+## Features
+### Completed
 1. User authentication with ASP.NET Identity
 2. Survey CRUD (create, read, update, delete)
 3. Question management with multiple question types
 4. Unique shareable survey links
 5. Response collection without requiring respondent login
 6. Results dashboard with analytics
+
+### Pending
 7. Conditional question logic
+
+## Backend API Endpoints
+### Auth
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+
+### Surveys
+- `GET /api/surveys`
+- `POST /api/surveys`
+- `GET /api/surveys/{id}`
+- `PUT /api/surveys/{id}`
+- `DELETE /api/surveys/{id}`
+- `GET /api/surveys/{id}/results`
+
+### Questions
+- `GET /api/surveys/{id}/questions`
+- `POST /api/surveys/{id}/questions`
+- `GET /api/surveys/{id}/questions/{questionId}`
+- `PUT /api/surveys/{id}/questions/{questionId}`
+- `DELETE /api/surveys/{id}/questions/{questionId}`
+
+### Options
+- `GET /api/surveys/{id}/questions/{questionId}/options`
+- `POST /api/surveys/{id}/questions/{questionId}/options`
+- `GET /api/surveys/{id}/questions/{questionId}/options/{optionId}`
+- `PUT /api/surveys/{id}/questions/{questionId}/options/{optionId}`
+- `DELETE /api/surveys/{id}/questions/{questionId}/options/{optionId}`
+
+### Public
+- `GET /api/public/surveys/{shareableCode}`
+- `POST /api/public/surveys/{shareableCode}/responses`
+
+## Frontend
+- Mobile first responsive design
+- React with TypeScript (Vite)
+- React Router for navigation
+- Axios for API calls
+- API runs on http://localhost:5228 in development
