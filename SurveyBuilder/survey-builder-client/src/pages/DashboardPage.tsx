@@ -93,7 +93,7 @@ export default function DashboardPage() {
                 <p className="survey-card-description">{survey.description}</p>
               )}
 
-              <p className="survey-card-code">Code: {survey.shareableCode}</p>
+              <p className="survey-card-code">Shareable code: {survey.shareableCode}</p>
 
               <div className="survey-card-actions">
                 <button
@@ -101,6 +101,12 @@ export default function DashboardPage() {
                   onClick={() => navigate(`/surveys/${survey.id}/results`)}
                 >
                   Results
+                </button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => navigate(`/surveys/${survey.id}/edit`)}
+                >
+                  Edit
                 </button>
                 <button
                   className="btn btn-secondary"

@@ -7,6 +7,11 @@ export interface Survey {
   createdAt: string
 }
 
+export interface CreateSurveyRequest {
+  title: string
+  description: string | null
+}
+
 export interface UpdateSurveyRequest {
   title: string
   description: string | null
