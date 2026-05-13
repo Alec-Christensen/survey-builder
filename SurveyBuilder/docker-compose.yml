@@ -11,5 +11,20 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  api:
+    build:
+      context: ./SurveyBuilder.API
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=survey_builder;Username=postgres;Password=postgres
+      - Jwt__Key=change-me-super-secret-key-min-32-chars!
+      - Jwt__Issuer=SurveyBuilderAPI
+      - Jwt__Audience=SurveyBuilderClient
+
 volumes:
   postgres_data:
