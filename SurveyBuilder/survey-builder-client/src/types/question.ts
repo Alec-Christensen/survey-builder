@@ -1,9 +1,11 @@
-export enum QuestionType {
-  Text = 0,
-  SingleChoice = 1,
-  MultipleChoice = 2,
-  Rating = 3,
-}
+export const QuestionType = {
+  Text: 0,
+  SingleChoice: 1,
+  MultipleChoice: 2,
+  Rating: 3,
+} as const
+
+export type QuestionType = typeof QuestionType[keyof typeof QuestionType]
 
 export interface Question {
   id: string
