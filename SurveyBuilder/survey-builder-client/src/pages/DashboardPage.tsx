@@ -12,6 +12,7 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null)
   const [togglingId, setTogglingId] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
 
   useEffect(() => {
     getSurveys()
@@ -39,6 +40,12 @@ export default function DashboardPage() {
     } finally {
       setTogglingId(null)
     }
+  }
+
+  async function handleCopy(surveyId: string, url: string) {
+    await navigator.clipboard.writeText(url)
+    setCopiedId(surveyId)
+    setTimeout(() => setCopiedId(null), 2000)
   }
 
   async function handleDelete(id: string) {
@@ -93,7 +100,22 @@ export default function DashboardPage() {
                 <p className="survey-card-description">{survey.description}</p>
               )}
 
-              <p className="survey-card-code">Shareable code: {survey.shareableCode}</p>
+              <div className="survey-card-url">
+                <a
+                  href={`${window.location.origin}/survey/${survey.shareableCode}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="survey-card-url-link"
+                >
+                  {`${window.location.origin}/survey/${survey.shareableCode}`}
+                </a>
+                <button
+                  className={`btn-copy${copiedId === survey.id ? ' btn-copy-copied' : ''}`}
+                  onClick={() => handleCopy(survey.id, `${window.location.origin}/survey/${survey.shareableCode}`)}
+                >
+                  {copiedId === survey.id ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
 
               <div className="survey-card-actions">
                 <button
