@@ -38,6 +38,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddCors(opts =>
+{
+    opts.AddPolicy("AllowFrontend", policy =>
+        policy.WithOrigins("https://survey-builder-client-production.up.railway.app")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opts =>
@@ -75,6 +83,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
