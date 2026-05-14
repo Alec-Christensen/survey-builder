@@ -34,10 +34,6 @@ The backend follows a layered architecture:
 - Branch naming: feat/feature-name, fix/bug-name, chore/task-name
 - Merge to main only when a feature is complete and working
 
-## Project Structure
-- SurveyBuilder.API - the main backend API project
-- survey-builder-client - React frontend (Vite + TypeScript)
-
 ## Features
 ### Completed
 1. User authentication with ASP.NET Identity
@@ -81,9 +77,90 @@ The backend follows a layered architecture:
 - `GET /api/public/surveys/{shareableCode}`
 - `POST /api/public/surveys/{shareableCode}/responses`
 
+## Deployment
+- Backend: https://survey-builder-production.up.railway.app
+- Frontend: https://survey-builder-client-production.up.railway.app
+- Hosted on Railway
+
 ## Frontend
 - Mobile first responsive design
 - React with TypeScript (Vite)
 - React Router for navigation
 - Axios for API calls
 - API runs on http://localhost:5228 in development
+
+### Pages
+| Page | Route | Access |
+|------|-------|--------|
+| `LoginPage` | `/` | Public |
+| `RegisterPage` | `/register` | Public |
+| `DashboardPage` | `/dashboard` | Protected |
+| `SurveyEditorPage` | `/surveys/create`, `/surveys/:id/edit` | Protected |
+| `PublicSurveyPage` | `/survey/:shareableCode` | Public |
+| `ResultsPage` | `/surveys/:id/results` | Protected |
+
+## Project Structure
+```
+SurveyBuilder/
+├── docker-compose.yml
+├── SurveyBuilder.sln
+├── SurveyBuilder.API/
+│   ├── Controllers/
+│   │   ├── AuthController.cs
+│   │   ├── SurveysController.cs
+│   │   ├── QuestionsController.cs
+│   │   ├── OptionsController.cs
+│   │   └── PublicSurveysController.cs
+│   ├── Services/
+│   │   ├── AuthService.cs / IAuthService.cs
+│   │   ├── SurveyService.cs / ISurveyService.cs
+│   │   ├── QuestionService.cs / IQuestionService.cs
+│   │   ├── OptionService.cs / IOptionService.cs
+│   │   └── PublicSurveyService.cs / IPublicSurveyService.cs
+│   ├── Models/
+│   │   ├── User.cs
+│   │   ├── Survey.cs
+│   │   ├── Question.cs
+│   │   ├── QuestionType.cs
+│   │   ├── Option.cs
+│   │   ├── Response.cs
+│   │   └── Answer.cs
+│   ├── DTOs/
+│   │   ├── Auth: LoginRequest, RegisterRequest, AuthResponse
+│   │   ├── Survey: CreateSurveyRequest, UpdateSurveyRequest, SurveyResponse, SurveyResultsResponse
+│   │   ├── Question: CreateQuestionRequest, UpdateQuestionRequest, QuestionResponse, QuestionResultResponse
+│   │   ├── Option: CreateOptionRequest, UpdateOptionRequest, OptionResponse, OptionResultResponse
+│   │   └── Public: PublicSurveyResponse, PublicQuestionResponse, SubmitResponseRequest, SubmitResponseResponse, SubmitAnswerRequest
+│   ├── Data/
+│   │   └── AppDbContext.cs
+│   ├── Migrations/
+│   ├── Program.cs
+│   └── appsettings.json
+└── survey-builder-client/
+    └── src/
+        ├── pages/
+        │   ├── LoginPage.tsx
+        │   ├── RegisterPage.tsx
+        │   ├── DashboardPage.tsx
+        │   ├── SurveyEditorPage.tsx
+        │   ├── PublicSurveyPage.tsx
+        │   └── ResultsPage.tsx
+        ├── components/
+        │   └── ProtectedRoute.tsx
+        ├── services/
+        │   ├── api.ts
+        │   ├── authService.ts
+        │   ├── surveyService.ts
+        │   ├── questionService.ts
+        │   ├── optionService.ts
+        │   ├── publicSurveyService.ts
+        │   └── resultsService.ts
+        ├── types/
+        │   ├── auth.ts
+        │   ├── survey.ts
+        │   ├── question.ts
+        │   ├── public.ts
+        │   └── results.ts
+        ├── App.tsx
+        └── main.tsx
+```
