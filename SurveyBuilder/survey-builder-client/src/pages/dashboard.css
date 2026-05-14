@@ -124,11 +124,51 @@
   line-height: 1.4;
 }
 
-.survey-card-code {
-  font-size: 0.75rem;
-  color: #9ca3af;
+.survey-card-url {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   margin-bottom: 1rem;
+  min-width: 0;
+}
+
+.survey-card-url-link {
+  font-size: 0.75rem;
+  color: #6366f1;
   font-family: monospace;
+  text-decoration: none;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.survey-card-url-link:hover {
+  text-decoration: underline;
+}
+
+.btn-copy {
+  flex-shrink: 0;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.btn-copy:hover {
+  background: #f3f4f6;
+}
+
+.btn-copy-copied {
+  background: #dcfce7;
+  color: #16a34a;
+  border-color: #bbf7d0;
 }
 
 .survey-card-actions {
