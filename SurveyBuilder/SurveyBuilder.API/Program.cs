@@ -43,7 +43,7 @@ builder.Services.AddCors(opts =>
     opts.AddPolicy("AllowFrontend", policy =>
         policy.WithOrigins("https://survey-builder-client-production.up.railway.app")
               .AllowAnyHeader()
-              .AllowAnyMethod());
+              .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 });
 
 builder.Services.AddControllers();
@@ -82,9 +82,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
 app.UseCors("AllowFrontend");
+
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
