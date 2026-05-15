@@ -71,8 +71,33 @@ public class SurveyService : ISurveyService
 
         if (survey is null) return false;
 
+        await using var transaction = await _db.Database.BeginTransactionAsync();
+
+        var questionIds = await _db.Questions
+            .Where(q => q.SurveyId == id)
+            .Select(q => q.Id)
+            .ToListAsync();
+
+        await _db.Answers
+            .Where(a => questionIds.Contains(a.QuestionId))
+            .ExecuteDeleteAsync();
+
+        await _db.Responses
+            .Where(r => r.SurveyId == id)
+            .ExecuteDeleteAsync();
+
+        await _db.Options
+            .Where(o => questionIds.Contains(o.QuestionId))
+            .ExecuteDeleteAsync();
+
+        await _db.Questions
+            .Where(q => questionIds.Contains(q.Id))
+            .ExecuteDeleteAsync();
+
         _db.Surveys.Remove(survey);
         await _db.SaveChangesAsync();
+
+        await transaction.CommitAsync();
 
         return true;
     }
