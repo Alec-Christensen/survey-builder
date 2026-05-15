@@ -83,7 +83,8 @@ The backend follows a layered architecture:
 - Hosted on Railway
 
 ## Frontend
-- Mobile first responsive design
+- Responsive design — mobile, tablet and desktop. Use a max-width container
+  for all pages. Do not let content stretch to full width on large screens.
 - React with TypeScript (Vite)
 - React Router for navigation
 - Axios for API calls
