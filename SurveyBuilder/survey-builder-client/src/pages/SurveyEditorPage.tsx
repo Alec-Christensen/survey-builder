@@ -4,6 +4,7 @@ import { createSurvey, getSurvey, updateSurvey } from '../services/surveyService
 import { getQuestions, createQuestion, updateQuestion, deleteQuestion } from '../services/questionService'
 import { getOptions, createOption, updateOption, deleteOption } from '../services/optionService'
 import { QuestionType } from '../types/question'
+import Navbar from '../components/Navbar'
 import './survey-editor.css'
 
 interface EditorOption {
@@ -262,18 +263,11 @@ export default function SurveyEditorPage() {
 
   return (
     <div className="editor-page">
-      <div className="editor-header">
-        <h1>{isEditMode ? 'Edit Survey' : 'Create Survey'}</h1>
-        <div className="editor-header-actions">
-          <button className="btn btn-secondary" onClick={() => navigate('/dashboard')}>
-            Cancel
-          </button>
-          <button className="btn btn-primary" disabled={saving} onClick={handleSave}>
-            {saving ? 'Saving…' : 'Save Survey'}
-          </button>
-        </div>
-      </div>
-
+      <Navbar
+        primaryAction={{ label: saving ? 'Saving…' : 'Save Survey', onClick: handleSave }}
+        secondaryAction={{ label: 'Cancel', onClick: () => navigate('/dashboard') }}
+      />
+      <div style={{ paddingTop: '32px' }}>
       {error && <div className="editor-error">{error}</div>}
 
       {loading ? (
@@ -389,6 +383,7 @@ export default function SurveyEditorPage() {
           </div>
         </>
       )}
+      </div>
     </div>
   )
 }
