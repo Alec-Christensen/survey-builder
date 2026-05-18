@@ -11,14 +11,14 @@ export default function Navbar({ primaryAction, secondaryAction }: NavbarProps) 
     <nav className="navbar">
       <Link to="/dashboard" className="navbar-brand">SurveyBuilder</Link>
       <div className="navbar-actions">
-        {secondaryAction && (
-          <button className="btn btn-secondary btn-sm" onClick={secondaryAction.onClick}>
-            {secondaryAction.label}
-          </button>
-        )}
         {primaryAction && (
           <button className="btn btn-primary btn-sm" onClick={primaryAction.onClick}>
             {primaryAction.label}
+          </button>
+        )}
+        {secondaryAction && (
+          <button className="btn btn-secondary btn-sm" onClick={secondaryAction.onClick}>
+            {secondaryAction.label}
           </button>
         )}
       </div>

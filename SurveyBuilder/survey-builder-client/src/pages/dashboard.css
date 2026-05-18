@@ -1,87 +1,7 @@
-.dashboard-page {
-  min-height: 100svh;
-  background: #f5f5f7;
-  padding: 1rem;
-}
-
-.dashboard-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 720px;
-  margin: 0 auto 1.5rem;
-  gap: 0.75rem;
-}
-
-.dashboard-header h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #111;
-  margin: 0;
-}
-
-.dashboard-header-actions {
-  display: flex;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
-.btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s, opacity 0.15s;
-  white-space: nowrap;
-}
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-primary {
-  background: #6366f1;
-  color: #fff;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: #4f46e5;
-}
-
-.btn-secondary {
-  background: #e5e7eb;
-  color: #374151;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background: #d1d5db;
-}
-
-.btn-danger {
-  background: #fee2e2;
-  color: #dc2626;
-}
-
-.btn-danger:hover:not(:disabled) {
-  background: #fecaca;
-}
-
 .survey-list {
-  max-width: 720px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-.survey-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  padding: 1.25rem 1.5rem;
 }
 
 .survey-card-top {
@@ -89,122 +9,114 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.5rem;
 }
 
 .survey-card-title {
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 600;
-  color: #111;
+  color: var(--color-text-primary);
   margin: 0;
 }
 
-.badge {
+.status-badge {
   flex-shrink: 0;
-  padding: 0.2rem 0.6rem;
+  padding: 3px 10px;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 12px;
   font-weight: 500;
 }
 
-.badge-published {
+.status-badge.published {
   background: #dcfce7;
   color: #16a34a;
 }
 
-.badge-unpublished {
-  background: #f3f4f6;
-  color: #6b7280;
+.status-badge.unpublished {
+  background: #f1f5f9;
+  color: var(--color-text-secondary);
 }
 
-.survey-card-description {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin: 0 0 0.75rem;
-  line-height: 1.4;
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+  margin-bottom: 24px;
 }
 
-.survey-card-url {
+.filter-tab {
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+.filter-tab.active {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.survey-link-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  min-width: 0;
+  gap: 8px;
+  margin: 12px 0;
 }
 
-.survey-card-url-link {
-  font-size: 0.75rem;
-  color: #6366f1;
-  font-family: monospace;
-  text-decoration: none;
-  min-width: 0;
+.survey-link-text {
+  font-size: 13px;
+  color: var(--color-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex: 1;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
-.survey-card-url-link:hover {
-  text-decoration: underline;
-}
-
-.btn-copy {
+.copy-btn {
   flex-shrink: 0;
-  padding: 0.2rem 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  background: #f9fafb;
-  color: #374151;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-  white-space: nowrap;
 }
 
-.btn-copy:hover {
-  background: #f3f4f6;
-}
-
-.btn-copy-copied {
+.copy-btn.copied {
   background: #dcfce7;
   color: #16a34a;
   border-color: #bbf7d0;
 }
 
-.survey-card-actions {
+.card-actions {
   display: flex;
+  gap: 8px;
+  margin-top: 16px;
   flex-wrap: wrap;
-  gap: 0.5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--color-text-secondary);
 }
 
 .dashboard-status {
-  max-width: 720px;
-  margin: 0 auto;
   padding: 2rem 0;
   text-align: center;
-  color: #6b7280;
+  color: var(--color-text-secondary);
   font-size: 0.9375rem;
-}
-
-.dashboard-empty {
-  max-width: 720px;
-  margin: 0 auto;
-  text-align: center;
-  padding: 3rem 1rem;
-}
-
-.dashboard-empty p {
-  color: #6b7280;
-  margin-bottom: 1.25rem;
 }
 
 .dashboard-error {
   background: #fef2f2;
   border: 1px solid #fecaca;
-  color: #dc2626;
-  border-radius: 8px;
+  color: var(--color-danger);
+  border-radius: var(--radius-md);
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
-  max-width: 720px;
-  margin: 0 auto 1rem;
+  margin-bottom: 1rem;
 }
