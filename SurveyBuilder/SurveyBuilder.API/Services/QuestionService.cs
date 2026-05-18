@@ -70,17 +70,22 @@ public class QuestionService : IQuestionService
         return ToResponse(question);
     }
 
-    public async Task<bool> DeleteAsync(Guid id, Guid surveyId, string userId)
+    public async Task<(bool success, string? error)> DeleteAsync(Guid id, Guid surveyId, string userId)
     {
         var question = await _db.Questions
             .FirstOrDefaultAsync(q => q.Id == id && q.SurveyId == surveyId && q.Survey.UserId == userId);
 
-        if (question is null) return false;
+        if (question is null) return (false, null);
+
+        var hasResponses = await _db.Answers
+            .AnyAsync(a => a.QuestionId == id);
+
+        if (hasResponses)
+            return (false, "This question has existing responses and cannot be deleted.");
 
         _db.Questions.Remove(question);
         await _db.SaveChangesAsync();
-
-        return true;
+        return (true, null);
     }
 
     private static QuestionResponse ToResponse(Question q) => new()

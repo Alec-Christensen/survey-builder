@@ -178,8 +178,8 @@ export default function SurveyEditorPage() {
         await saveEdit()
       }
       navigate('/dashboard')
-    } catch {
-      setError('Failed to save survey. Please try again.')
+    } catch (err: any) {
+      setError(err?.message ?? 'Failed to save survey. Please try again.')
     } finally {
       setSaving(false)
     }
@@ -208,7 +208,14 @@ export default function SurveyEditorPage() {
       isPublished,
     })
 
-    await Promise.all(deletedQuestionIds.map((qId) => deleteQuestion(id!, qId)))
+    for (const qId of deletedQuestionIds) {
+      try {
+        await deleteQuestion(id!, qId)
+      } catch (err: any) {
+        const message = err?.response?.data?.message
+        throw new Error(message ?? 'Failed to delete a question.')
+      }
+    }
 
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i]
