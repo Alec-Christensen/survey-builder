@@ -8,5 +8,5 @@ public interface IOptionService
     Task<OptionResponse?> GetByIdAsync(Guid id, Guid questionId, Guid surveyId, string userId);
     Task<OptionResponse?> CreateAsync(Guid questionId, Guid surveyId, CreateOptionRequest dto, string userId);
     Task<OptionResponse?> UpdateAsync(Guid id, Guid questionId, Guid surveyId, UpdateOptionRequest dto, string userId);
-    Task<bool> DeleteAsync(Guid id, Guid questionId, Guid surveyId, string userId);
+    Task<(bool success, string? error)> DeleteAsync(Guid id, Guid questionId, Guid surveyId, string userId);
 }

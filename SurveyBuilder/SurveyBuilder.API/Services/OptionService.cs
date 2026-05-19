@@ -76,7 +76,7 @@ public class OptionService : IOptionService
         return ToResponse(option);
     }
 
-    public async Task<bool> DeleteAsync(Guid id, Guid questionId, Guid surveyId, string userId)
+    public async Task<(bool success, string? error)> DeleteAsync(Guid id, Guid questionId, Guid surveyId, string userId)
     {
         var option = await _db.Options
             .FirstOrDefaultAsync(o => o.Id == id
@@ -84,12 +84,17 @@ public class OptionService : IOptionService
                                    && o.Question.SurveyId == surveyId
                                    && o.Question.Survey.UserId == userId);
 
-        if (option is null) return false;
+        if (option is null) return (false, null);
+
+        var hasAnswers = await _db.Answers.AnyAsync(a => a.SelectedOptionId == id);
+
+        if (hasAnswers)
+            return (false, "This option has existing responses and cannot be deleted.");
 
         _db.Options.Remove(option);
         await _db.SaveChangesAsync();
 
-        return true;
+        return (true, null);
     }
 
     private static OptionResponse ToResponse(Option o) => new()
