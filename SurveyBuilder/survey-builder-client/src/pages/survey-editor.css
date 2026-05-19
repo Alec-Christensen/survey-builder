@@ -112,7 +112,7 @@
 .form-group label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-text-secondary);
 }
 
 .form-group input,
@@ -122,7 +122,7 @@
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 1rem;
-  color: #111;
+  color: var(--color-text-primary);
   outline: none;
   transition: border-color 0.15s;
   width: 100%;
@@ -185,7 +185,7 @@
   gap: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-text-secondary);
   cursor: pointer;
   padding-bottom: 0.625rem;
   white-space: nowrap;

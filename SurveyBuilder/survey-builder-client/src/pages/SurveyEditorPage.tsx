@@ -300,7 +300,7 @@ export default function SurveyEditorPage() {
           <div className="editor-section">
             <div className="editor-section-header">
               <h2>Questions</h2>
-              <button className="btn btn-secondary" onClick={addQuestion}>
+              <button className="btn btn-primary btn-sm" onClick={addQuestion}>
                 Add Question
               </button>
             </div>
@@ -373,7 +373,7 @@ export default function SurveyEditorPage() {
                         </button>
                       </div>
                     ))}
-                    <button className="btn btn-secondary" onClick={() => addOption(idx)}>
+                    <button className="btn btn-secondary btn-sm" onClick={() => addOption(idx)}>
                       Add Option
                     </button>
                   </div>
