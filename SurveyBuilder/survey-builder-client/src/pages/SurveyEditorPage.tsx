@@ -241,7 +241,13 @@ export default function SurveyEditorPage() {
       }
 
       const toDeleteOpts = deletedOptionIds[q.id ?? ''] ?? []
-      await Promise.all(toDeleteOpts.map((oId) => deleteOption(id!, questionId, oId)))
+      for (const oId of toDeleteOpts) {
+        try {
+          await deleteOption(id!, questionId, oId)
+        } catch {
+          // Option may already be deleted, ignore
+        }
+      }
 
       for (let j = 0; j < q.options.length; j++) {
         const opt = q.options[j]
