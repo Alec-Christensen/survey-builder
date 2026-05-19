@@ -53,6 +53,8 @@ export default function DashboardPage() {
   }
 
   async function handleDelete(id: string) {
+    const confirmed = window.confirm('Are you sure you want to delete this survey? This action cannot be undone.')
+    if (!confirmed) return
     setDeletingId(id)
     try {
       await deleteSurvey(id)
