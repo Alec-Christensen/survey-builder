@@ -251,8 +251,10 @@ export default function SurveyEditorPage() {
       for (const oId of toDeleteOpts) {
         try {
           await deleteOption(id!, questionId, oId)
-        } catch {
-          // Option may already be deleted, ignore
+        } catch (err: any) {
+          if (err?.response?.status === 404) continue
+          const message = err?.response?.data?.message
+          throw new Error(message ?? 'Failed to delete an option.')
         }
       }
 

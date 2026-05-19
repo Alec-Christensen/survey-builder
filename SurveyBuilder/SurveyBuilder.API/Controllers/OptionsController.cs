@@ -57,8 +57,9 @@ public class OptionsController : ControllerBase
     public async Task<IActionResult> Delete(Guid surveyId, Guid questionId, Guid id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var deleted = await _optionService.DeleteAsync(id, questionId, surveyId, userId);
-        if (!deleted) return NotFound();
+        var (success, error) = await _optionService.DeleteAsync(id, questionId, surveyId, userId);
+        if (error is not null) return BadRequest(new { message = error });
+        if (!success) return NotFound();
         return NoContent();
     }
 }
