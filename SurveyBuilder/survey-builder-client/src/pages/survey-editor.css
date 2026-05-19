@@ -212,15 +212,16 @@
   margin: 0 0 0.5rem;
 }
 
-.option-row {
+.options-section .option-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
-.option-row input {
+.options-section .option-row input {
   flex: 1;
+  min-width: 0;
   padding: 0.5rem 0.75rem;
   border: 1px solid #d1d5db;
   border-radius: 8px;
@@ -231,14 +232,16 @@
   font-family: inherit;
 }
 
-.option-row input:focus {
+.options-section .option-row input:focus {
   border-color: #6366f1;
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
-.option-row .btn-danger {
+.options-section .option-row .btn-danger {
   padding: 0.5rem 0.625rem;
   flex-shrink: 0;
+  width: auto;
+  min-width: unset;
   line-height: 1;
 }
 
