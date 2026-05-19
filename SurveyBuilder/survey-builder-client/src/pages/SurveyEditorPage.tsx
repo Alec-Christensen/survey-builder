@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createSurvey, getSurvey, updateSurvey } from '../services/surveyService'
 import { getQuestions, createQuestion, updateQuestion, deleteQuestion } from '../services/questionService'
@@ -34,6 +34,13 @@ export default function SurveyEditorPage() {
   const [loading, setLoading] = useState(isEditMode)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const errorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (error && errorRef.current) {
+      errorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [error])
 
   useEffect(() => {
     if (!isEditMode) return
@@ -274,7 +281,7 @@ export default function SurveyEditorPage() {
         secondaryAction={{ label: 'Cancel', onClick: () => navigate('/dashboard') }}
       />
       <div style={{ paddingTop: '32px' }}>
-      {error && <div className="editor-error">{error}</div>}
+      {error && <div ref={errorRef} className="editor-error">{error}</div>}
 
       {loading ? (
         <div className="editor-status">Loading survey…</div>
