@@ -6,7 +6,6 @@ import './auth.css'
 
 export default function RegisterPage() {
   const navigate = useNavigate()
-  const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -17,7 +16,7 @@ export default function RegisterPage() {
     setError('')
     setLoading(true)
     try {
-      await register({ displayName, email, password })
+      await register({ email, password })
       navigate('/dashboard')
     } catch (err) {
       if (isAxiosError(err) && err.response?.data?.errors) {
@@ -36,17 +35,6 @@ export default function RegisterPage() {
         <h1>Create account</h1>
         <form onSubmit={handleSubmit} noValidate>
           {error && <p className="auth-error">{error}</p>}
-          <div className="form-group">
-            <label htmlFor="displayName">Display name</label>
-            <input
-              id="displayName"
-              type="text"
-              value={displayName}
-              onChange={e => setDisplayName(e.target.value)}
-              autoComplete="name"
-              required
-            />
-          </div>
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input

@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { clearToken } from '../services/authService'
 import { getSurveys, updateSurvey, deleteSurvey } from '../services/surveyService'
 import type { Survey } from '../types/survey'
+import Navbar from '../components/Navbar'
 import './dashboard.css'
+
+type FilterTab = 'all' | 'published' | 'unpublished'
 
 export default function DashboardPage() {
   const navigate = useNavigate()
@@ -13,6 +16,7 @@ export default function DashboardPage() {
   const [togglingId, setTogglingId] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<FilterTab>('all')
 
   useEffect(() => {
     getSurveys()
@@ -49,6 +53,8 @@ export default function DashboardPage() {
   }
 
   async function handleDelete(id: string) {
+    const confirmed = window.confirm('Are you sure you want to delete this survey? This action cannot be undone.')
+    if (!confirmed) return
     setDeletingId(id)
     try {
       await deleteSurvey(id)
@@ -60,99 +66,111 @@ export default function DashboardPage() {
     }
   }
 
+  const filteredSurveys = surveys.filter((s) => {
+    if (activeTab === 'published') return s.isPublished
+    if (activeTab === 'unpublished') return !s.isPublished
+    return true
+  })
+
+  const emptyMessages: Record<FilterTab, string> = {
+    all: "No surveys yet. Click 'Create Survey' to get started.",
+    published: 'No published surveys.',
+    unpublished: 'No unpublished surveys.',
+  }
+
   return (
-    <div className="dashboard-page">
-      <div className="dashboard-header">
-        <h1>My Surveys</h1>
-        <div className="dashboard-header-actions">
-          <button className="btn btn-primary" onClick={() => navigate('/surveys/create')}>
-            Create Survey
-          </button>
-          <button className="btn btn-secondary" onClick={handleLogout}>
-            Log out
-          </button>
-        </div>
-      </div>
+    <>
+      <Navbar
+        primaryAction={{ label: 'Create Survey', onClick: () => navigate('/surveys/create') }}
+        secondaryAction={{ label: 'Log out', onClick: handleLogout }}
+      />
+      <div className="page-container">
+        {error && <div className="dashboard-error">{error}</div>}
 
-      {error && <div className="dashboard-error">{error}</div>}
-
-      {loading ? (
-        <div className="dashboard-status">Loading surveys…</div>
-      ) : surveys.length === 0 ? (
-        <div className="dashboard-empty">
-          <p>You haven't created any surveys yet.</p>
-          <button className="btn btn-primary" onClick={() => navigate('/surveys/create')}>
-            Create your first survey
-          </button>
-        </div>
-      ) : (
-        <div className="survey-list">
-          {surveys.map((survey) => (
-            <div key={survey.id} className="survey-card">
-              <div className="survey-card-top">
-                <h2 className="survey-card-title">{survey.title}</h2>
-                <span className={`badge ${survey.isPublished ? 'badge-published' : 'badge-unpublished'}`}>
-                  {survey.isPublished ? 'Published' : 'Unpublished'}
-                </span>
-              </div>
-
-              {survey.description && (
-                <p className="survey-card-description">{survey.description}</p>
-              )}
-
-              <div className="survey-card-url">
-                <a
-                  href={`${window.location.origin}/survey/${survey.shareableCode}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="survey-card-url-link"
-                >
-                  {`${window.location.origin}/survey/${survey.shareableCode}`}
-                </a>
-                <button
-                  className={`btn-copy${copiedId === survey.id ? ' btn-copy-copied' : ''}`}
-                  onClick={() => handleCopy(survey.id, `${window.location.origin}/survey/${survey.shareableCode}`)}
-                >
-                  {copiedId === survey.id ? 'Copied!' : 'Copy'}
-                </button>
-              </div>
-
-              <div className="survey-card-actions">
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => navigate(`/surveys/${survey.id}/results`)}
-                >
-                  Results
-                </button>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => navigate(`/surveys/${survey.id}/edit`)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn btn-secondary"
-                  disabled={togglingId === survey.id}
-                  onClick={() => handleTogglePublish(survey)}
-                >
-                  {togglingId === survey.id
-                    ? 'Saving…'
-                    : survey.isPublished
-                    ? 'Unpublish'
-                    : 'Publish'}
-                </button>
-                <button
-                  className="btn btn-danger"
-                  disabled={deletingId === survey.id}
-                  onClick={() => handleDelete(survey.id)}
-                >
-                  {deletingId === survey.id ? 'Deleting…' : 'Delete'}
-                </button>
-              </div>
-            </div>
+        <div className="filter-tabs">
+          {(['all', 'published', 'unpublished'] as FilterTab[]).map((tab) => (
+            <button
+              key={tab}
+              className={`filter-tab${activeTab === tab ? ' active' : ''}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
           ))}
         </div>
-      )}
-    </div>
+
+        {loading ? (
+          <div className="dashboard-status">Loading surveys…</div>
+        ) : filteredSurveys.length === 0 ? (
+          <div className="empty-state">{emptyMessages[activeTab]}</div>
+        ) : (
+          <div className="survey-list">
+            {filteredSurveys.map((survey) => {
+              const url = `${window.location.origin}/survey/${survey.shareableCode}`
+              return (
+                <div key={survey.id} className="card">
+                  <div className="survey-card-top">
+                    <h2 className="survey-card-title">{survey.title}</h2>
+                    <span className={`status-badge ${survey.isPublished ? 'published' : 'unpublished'}`}>
+                      {survey.isPublished ? 'Published' : 'Unpublished'}
+                    </span>
+                  </div>
+
+                  <div className="survey-link-row">
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="survey-link-text"
+                    >
+                      {url}
+                    </a>
+                    <button
+                      className={`btn btn-secondary btn-sm copy-btn${copiedId === survey.id ? ' copied' : ''}`}
+                      onClick={() => handleCopy(survey.id, url)}
+                    >
+                      {copiedId === survey.id ? 'Copied!' : 'Copy'}
+                    </button>
+                  </div>
+
+                  <div className="card-actions">
+                    <button
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => navigate(`/surveys/${survey.id}/results`)}
+                    >
+                      Results
+                    </button>
+                    <button
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => navigate(`/surveys/${survey.id}/edit`)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className={`btn btn-sm ${survey.isPublished ? 'btn-secondary' : 'btn-primary'}`}
+                      disabled={togglingId === survey.id}
+                      onClick={() => handleTogglePublish(survey)}
+                    >
+                      {togglingId === survey.id
+                        ? 'Saving…'
+                        : survey.isPublished
+                        ? 'Unpublish'
+                        : 'Publish'}
+                    </button>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      disabled={deletingId === survey.id}
+                      onClick={() => handleDelete(survey.id)}
+                    >
+                      {deletingId === survey.id ? 'Deleting…' : 'Delete'}
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+    </>
   )
 }

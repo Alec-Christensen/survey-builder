@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getSurveyResults } from '../services/resultsService'
+import Navbar from '../components/Navbar'
 import type { SurveyResults, QuestionResult } from '../types/results'
 import { QuestionType } from '../types/question'
 import './results.css'
@@ -114,11 +115,8 @@ export default function ResultsPage() {
 
   return (
     <div className="results-page">
-      <div className="results-container">
-        <button className="btn btn-secondary back-btn" onClick={() => navigate('/dashboard')}>
-          ← Back
-        </button>
-
+      <Navbar secondaryAction={{ label: '← Back', onClick: () => navigate('/dashboard') }} />
+      <div style={{ maxWidth: '720px', margin: '0 auto', padding: '0 24px', paddingTop: '32px' }}>
         <div className="results-header">
           <h1 className="results-title">{results.title}</h1>
           <div className="response-count-badge">

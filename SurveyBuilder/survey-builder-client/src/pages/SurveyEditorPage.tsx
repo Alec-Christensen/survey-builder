@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createSurvey, getSurvey, updateSurvey } from '../services/surveyService'
 import { getQuestions, createQuestion, updateQuestion, deleteQuestion } from '../services/questionService'
 import { getOptions, createOption, updateOption, deleteOption } from '../services/optionService'
 import { QuestionType } from '../types/question'
+import Navbar from '../components/Navbar'
 import './survey-editor.css'
 
 interface EditorOption {
@@ -33,6 +34,13 @@ export default function SurveyEditorPage() {
   const [loading, setLoading] = useState(isEditMode)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const errorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (error && errorRef.current) {
+      errorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [error])
 
   useEffect(() => {
     if (!isEditMode) return
@@ -178,8 +186,8 @@ export default function SurveyEditorPage() {
         await saveEdit()
       }
       navigate('/dashboard')
-    } catch {
-      setError('Failed to save survey. Please try again.')
+    } catch (err: any) {
+      setError(err?.message ?? 'Failed to save survey. Please try again.')
     } finally {
       setSaving(false)
     }
@@ -208,7 +216,14 @@ export default function SurveyEditorPage() {
       isPublished,
     })
 
-    await Promise.all(deletedQuestionIds.map((qId) => deleteQuestion(id!, qId)))
+    for (const qId of deletedQuestionIds) {
+      try {
+        await deleteQuestion(id!, qId)
+      } catch (err: any) {
+        const message = err?.response?.data?.message
+        throw new Error(message ?? 'Failed to delete a question.')
+      }
+    }
 
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i]
@@ -233,7 +248,13 @@ export default function SurveyEditorPage() {
       }
 
       const toDeleteOpts = deletedOptionIds[q.id ?? ''] ?? []
-      await Promise.all(toDeleteOpts.map((oId) => deleteOption(id!, questionId, oId)))
+      for (const oId of toDeleteOpts) {
+        try {
+          await deleteOption(id!, questionId, oId)
+        } catch {
+          // Option may already be deleted, ignore
+        }
+      }
 
       for (let j = 0; j < q.options.length; j++) {
         const opt = q.options[j]
@@ -255,19 +276,12 @@ export default function SurveyEditorPage() {
 
   return (
     <div className="editor-page">
-      <div className="editor-header">
-        <h1>{isEditMode ? 'Edit Survey' : 'Create Survey'}</h1>
-        <div className="editor-header-actions">
-          <button className="btn btn-secondary" onClick={() => navigate('/dashboard')}>
-            Cancel
-          </button>
-          <button className="btn btn-primary" disabled={saving} onClick={handleSave}>
-            {saving ? 'Saving…' : 'Save Survey'}
-          </button>
-        </div>
-      </div>
-
-      {error && <div className="editor-error">{error}</div>}
+      <Navbar
+        primaryAction={{ label: saving ? 'Saving…' : 'Save Survey', onClick: handleSave }}
+        secondaryAction={{ label: 'Cancel', onClick: () => navigate('/dashboard') }}
+      />
+      <div style={{ paddingTop: '32px' }}>
+      {error && <div ref={errorRef} className="editor-error">{error}</div>}
 
       {loading ? (
         <div className="editor-status">Loading survey…</div>
@@ -299,7 +313,7 @@ export default function SurveyEditorPage() {
           <div className="editor-section">
             <div className="editor-section-header">
               <h2>Questions</h2>
-              <button className="btn btn-secondary" onClick={addQuestion}>
+              <button className="btn btn-primary btn-sm" onClick={addQuestion}>
                 Add Question
               </button>
             </div>
@@ -372,7 +386,7 @@ export default function SurveyEditorPage() {
                         </button>
                       </div>
                     ))}
-                    <button className="btn btn-secondary" onClick={() => addOption(idx)}>
+                    <button className="btn btn-secondary btn-sm" onClick={() => addOption(idx)}>
                       Add Option
                     </button>
                   </div>
@@ -382,6 +396,7 @@ export default function SurveyEditorPage() {
           </div>
         </>
       )}
+      </div>
     </div>
   )
 }

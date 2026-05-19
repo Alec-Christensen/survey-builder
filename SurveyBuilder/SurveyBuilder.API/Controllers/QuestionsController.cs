@@ -57,8 +57,11 @@ public class QuestionsController : ControllerBase
     public async Task<IActionResult> Delete(Guid surveyId, Guid id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var deleted = await _questionService.DeleteAsync(id, surveyId, userId);
-        if (!deleted) return NotFound();
+        var (success, error) = await _questionService.DeleteAsync(id, surveyId, userId);
+        if (!success && error != null)
+            return BadRequest(new { message = error });
+        if (!success)
+            return NotFound();
         return NoContent();
     }
 }
