@@ -65,7 +65,7 @@ The **frontend is fully decoupled** from the backend. It is a standalone React S
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Alec-Christensen/survey-builder.git
 cd SurveyBuilder
 ```
 
