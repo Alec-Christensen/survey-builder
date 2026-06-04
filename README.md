@@ -9,6 +9,19 @@ A full-stack web application for creating, sharing, and analyzing surveys. Built
 | Frontend | https://survey-builder-client-production.up.railway.app |
 | Backend API | https://survey-builder-production.up.railway.app |
 
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/7cb779f8-93a1-4985-9d53-4a10b52a118e" /></td>
+    <td><img src="https://github.com/user-attachments/assets/cc58d7f6-604c-44cc-8434-05dc810091c9" /></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/e253b73d-5cd6-4bd4-9f26-a496fa50e04b" /></td>
+    <td><img src="https://github.com/user-attachments/assets/cac6810a-fed7-4523-8d25-04d27a7ba69a" /></td>
+  </tr>
+</table>
+
 ## Tech Stack
 
 | Technology | Role |
